@@ -25,6 +25,7 @@
         .main {
             display: flex;
             flex-direction: row;
+            width: 100%;
         }
 
 		.headline {
@@ -53,8 +54,10 @@
         }
 		
         .flyer {
-            width: 18cm;
-            height: 24cm;
+            min-width: 18cm;
+            min-height: 24cm;
+            max-width: 18cm;
+            max-height: 24cm;
             background-color: #fffff1;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
@@ -96,7 +99,11 @@
             left: 25px;
             border-left: 8px solid #49894b;
         }
-        
+
+        #stickerTextGroup {
+            gap: 10px;
+        }
+
         .logo-container {
             bottom: 17px;
             right: 13px;
@@ -237,15 +244,20 @@
             const logo = document.querySelector('#logo');
             const sticker = document.querySelector('#sticker');
             const rbSticker = document.querySelector('#rb-sticker');
+            const rbNoSticker = document.querySelector('#rb-no-sticker');
             const stickerTextGroup = document.querySelector('#stickerTextGroup');
 
-            if (rbSticker.checked) {
+            if (rbNoSticker.checked) {
+                sticker.style.display = 'none';
+                stickerTextGroup.style.opacity = '0';
+                logo.style.display = 'none';
+            } else if (rbSticker.checked) {
                 sticker.style.display = 'flex';
-                stickerTextGroup.style.display = 'flex';
+                stickerTextGroup.style.opacity = '1';
                 logo.style.display = 'none';
             } else {
                 sticker.style.display = 'none';
-                stickerTextGroup.style.display = 'none';
+                stickerTextGroup.style.opacity = '0';
                 logo.style.display = 'flex';
             }
         }
@@ -470,6 +482,11 @@
             <div>
                 <input type="radio" id="rb-logo" name="sticker-or-logo" onchange="checkStickerOrLogo()" />
                 <label for="rb-logo">Logo</label>
+            </div>
+
+            <div>
+                <input type="radio" id="rb-no-sticker" name="sticker-or-logo" onchange="checkStickerOrLogo()" />
+                <label for="rb-no-sticker">Nichts</label>
             </div>
 
             <br>
