@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Template - GLT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: row;
+        }
+
+		.headline {
+            width: 330px;
+            height: 75px;
+            background-color: #49894b; /* Hintergrundfarbe */
+            transform: skew(-10deg); /* Verzerrung für Parallelogramm-Effekt */
+            margin: 50px auto;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            z-index: 2;
+        }
+        
+        .headline-text {
+            transform: skew(10deg); /* Gegenverzerrung für den Text */
+            text-align: center;
+            color: white;
+            text-transform: uppercase;
+            font-size: x-large;
+            font-weight: bold;
+        }
+		
+        .flyer {
+            width: 18cm;
+            height: 24cm;
+            background-color: #fffff1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #backgroundImage {
+            position: absolute;
+            width: 100%;
+            height: 49%;
+            background-image: url(./hintergrund.jpg);
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+            z-index: 1;
+            top: 0;
+            left: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 60px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .description {
+            font-size: 24px;
+            line-height: 1.4;
+            color: #333;
+            max-width: 90%;
+            margin-bottom: 49px;
+            background-color: rgba(255, 255, 241, 0.75);
+            padding: 20px;
+            position: absolute;
+            bottom: 107px;
+            left: 25px;
+            border-left: 8px solid #49894b;
+        }
+        
+        .logo-container {
+            bottom: 17px;
+            right: 13px;
+            position: absolute;
+        }
+
+        .logo, .sticker {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            transform: rotate(-14deg);
+            display: flex;
+            opacity: 0.85;
+            justify-content: center;
+            background-size: contain;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            background-image: url('./glt_logo_transparent.svg');
+            background-size: contain;
+        }
+
+        .sticker {
+            background: #49894b;
+            align-items: center;
+            text-align: center;
+            font-style: italic;
+            justify-content: center;
+            text-shadow: 1px 1px 2px black;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 40px;
+            left: 60px;
+            font-size: 24px;
+            color: #2E7D32;
+        }
+		
+		.controls {
+			flex-direction: column;
+			display: flex;
+			gap: 20px;
+			padding: 20px;
+			align-self: baseline;
+		}
+
+        .controls > div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .controls fieldset {
+            padding: 10px;
+        }
+
+        .controls fieldset input {
+            width: initial;
+        }
+
+        #footerGroup input {
+            width: initial;
+        }
+
+		#descriptionText {
+			height: 100px;
+		}
+
+        #stickerText {
+            width: 300px;
+        }
+
+        #logo {
+            display: none;
+        }
+
+        #url {
+            display: none;
+        }
+		
+		input {
+			width: 400px;
+		}
+
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <script src="./dom-to-image.min.js"></script>
+	
+	<script>
+        function setContent(id, content) {
+            document.querySelector('#' + id).innerHTML = content;
+        }
+
+        function saveWithDomToImage() {
+            const element = document.querySelector('#flyer');
+
+            domtoimage.toPng(element)
+            .then(function (dataUrl) {
+                const link = document.createElement('a');
+                link.download = 'flyer.png';
+                link.href = dataUrl;
+                link.click();
+            });
+        }
+
+        function checkStickerOrLogo() {
+            const logo = document.querySelector('#logo');
+            const sticker = document.querySelector('#sticker');
+            const rbSticker = document.querySelector('#rb-sticker');
+            const stickerTextGroup = document.querySelector('#stickerTextGroup');
+
+            if (rbSticker.checked) {
+                sticker.style.display = 'flex';
+                stickerTextGroup.style.display = 'flex';
+                logo.style.display = 'none';
+            } else {
+                sticker.style.display = 'none';
+                stickerTextGroup.style.display = 'none';
+                logo.style.display = 'flex';
+            }
+        }
+
+        function showUrl(showUrl) {
+            if (showUrl) {
+                document.querySelector('#url').style.display = 'block';
+            } else {
+                document.querySelector('#url').style.display = 'none';
+            }
+        }
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file!');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const backgroundImage = document.querySelector('#backgroundImage');
+                    backgroundImage.style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        let isBackgroundMoving = false;
+        let lastMousePosition = null;
+
+        function beginBackgroundMove() {
+            isBackgroundMoving = true;
+        }
+
+        function endBackgroundMove() {
+            isBackgroundMoving = false;
+            lastMousePosition = null
+        }
+
+        function moveBackgroundImage(offsetX, offsetY) {
+            const backgroundImage = document.querySelector('#backgroundImage');
+
+            const posX = parseInt(backgroundImage.style.backgroundPositionX) || 0;
+            const posY = parseInt(backgroundImage.style.backgroundPositionY) || 0;
+
+            backgroundImage.style.backgroundPositionX = posX + offsetX + 'px';
+            backgroundImage.style.backgroundPositionY = posY + offsetY + 'px';
+        }
+
+        function setBackgroundCover(isCoverBackground) {
+            const backgroundImage = document.querySelector('#backgroundImage');
+            const imageZoomGroup = document.querySelector('#imageZoomGroup');
+
+            if (isCoverBackground) {
+                backgroundImage.style.backgroundPositionX = '0px';
+                backgroundImage.style.backgroundPositionY = '0px';
+                backgroundImage.style.backgroundSize = 'cover';
+                imageZoomGroup.style.display = 'none';
+            } else {
+                backgroundImage.style.backgroundSize = '100%';
+                imageZoomGroup.style.display = 'block';
+            }
+        }
+
+        function zoomBackground(zoomValue) {
+            const backgroundImage = document.querySelector('#backgroundImage');
+            backgroundImage.style.backgroundSize = zoomValue + '%';
+        }
+
+        window.onload = function() {
+            const headlineText = document.querySelector('#headlineText');
+            const descriptionText = document.querySelector('#descriptionText');
+            const stickerText = document.querySelector('#stickerText');
+            const backgroundImage = document.querySelector('#backgroundImage');
+            const imageInput = document.querySelector('#imageInput');
+            const dropZone = document.querySelector('#dropZone');
+
+            headlineText.value = 'Zukunft nachhaltig gesalten';
+            descriptionText.value = 'Für eine <i>Politik</i>, die unsere <b>Umwelt</b> schützt und sozial gerecht ist. Gemeinsam für morgen. Für eine <i>Politik</i>, die unsere <b>Umwelt</b> schützt und sozial gerecht ist. Gemeinsam für morgen. Für eine <i>Politik</i>, die unsere <b>Umwelt</b> schützt und sozial gerecht ist. Gemeinsam für morgen.';
+            stickerText.value = 'Am 27.08.<br>in<br>Trebur';
+
+            setContent('headline', headlineText.value);
+            setContent('description', descriptionText.value);
+            setContent('sticker', stickerText.value);
+
+            backgroundImage.addEventListener('mousedown', beginBackgroundMove);
+            backgroundImage.addEventListener('mouseup', endBackgroundMove);
+            backgroundImage.addEventListener('mousemove', e => {
+                if (isBackgroundMoving) {
+                    if (lastMousePosition == null) {
+                        lastMousePosition = e;
+                    } else {
+                        moveBackgroundImage(e.clientX - lastMousePosition.clientX, e.clientY - lastMousePosition.clientY);
+                        lastMousePosition = e;
+                    }
+                }
+            });
+
+            backgroundImage.addEventListener('wheel', e => {
+                if (e.deltaY > 0) {
+                    zoomBackground(true);
+                } else {
+                    zoomBackground(false);
+                }
+            });
+
+            // File input change handler
+            imageInput.addEventListener('change', handleImageSelect);
+
+            // Drag and drop functionality
+            dropZone.addEventListener('click', () => {
+                imageInput.click();
+            });
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    imageInput.files = files;
+                    handleImageSelect({ target: imageInput });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="main">
+	<div id="flyer" class="flyer">
+        <div class="content">
+            <div id="backgroundImage" class="background"></div>
+            <div class="headline" style="position: absolute; top: 353px;">
+                <div id="headline" class="headline-text">Zukunft nachhaltig gestalten</div>
+            </div>
+            <div id="description" class="description" style=""><p>Für eine Politik, die unsere Umwelt schützt und sozial gerecht ist.</p></div>
+            <div class="logo-container">
+                <div id="logo" class="logo"></div>
+                <div id="sticker" class="sticker">Am 27.08.<br>in<br>Trebur</div>
+            </div>
+            
+            <div id="url" class="footer">https://glt-trebur.de</div>
+        </div>
+    </div>
+	
+	<div class="controls">
+
+
+        <fieldset>
+            <legend>Hintergrundbild</legend>
+
+            <div id="backgroundSelectionGroup">
+                <div class="drop-zone" id="dropZone">
+                    <p>Bild hier reinziehen oder klicken zum Auswählen</p>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <div>
+                <input type="radio" id="rb-cover" name="cover-or-zoom" checked onchange="setBackgroundCover(true)"/>
+                <label for="rb-cover">Ausfüllen</label>
+            </div>
+
+            <div>
+                <input type="radio" id="rb-zoom" name="cover-or-zoom" onchange="setBackgroundCover(false)" />
+                <label for="rb-zoom">Zoomen</label>
+            </div>
+
+            <div id="imageZoomGroup" style="display: none;">
+                <label for="imageZoom">Hintergrundbild Zoom: </label>
+                <input id="imageZoom" title="Zoom" type="range" min="1" max="1000" value="100" oninput="zoomBackground(value); nextElementSibling.value = value + '%';" />
+                <output for="imageZoom" id="imageZoomOutput">100%</output>
+            </div>
+
+            <br>
+
+            <div>
+                <b>Hinweis:</b> Das Bild lässt sich mit der Maus verschieben.
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Hilfe für HTML Tags</legend>
+
+            <div id="legend">
+                <div>Zeilenumbruch: <b>&lt;br&gt;</b></div>
+                <div>Fettschrift: <b>&lt;b&gt;fetter Text&lt;/b&gt;</b></div>
+                <div>Kursiv: <b><i>&lt;i&gt;kursiver Text&lt;/i&gt;</i></b></div>
+            </div>
+        </fieldset>
+
+        <div id="headlineTextGroup">
+            <label for="headlineText">Headline: </label>
+            <input id="headlineText" title="Headline" type="text" value="Zukunft nachhaltig gestalten" onkeyup="setContent('headline', value)" />
+        </div>
+
+        <div id="descriptionTextGroup">
+            <label for="descriptionText">Haupttext: </label>
+            <textarea id="descriptionText" title="Inhalt" onkeyup="setContent('description', value)"></textarea>
+        </div>
+
+        <fieldset>
+            <legend>Sticker oder Logo:</legend>
+
+            <div>
+                <input type="radio" id="rb-sticker" name="sticker-or-logo" checked onchange="checkStickerOrLogo()"/>
+                <label for="rb-sticker">Sticker</label>
+            </div>
+
+            <div>
+                <input type="radio" id="rb-logo" name="sticker-or-logo" onchange="checkStickerOrLogo()" />
+                <label for="rb-logo">Logo</label>
+            </div>
+
+            <br>
+
+            <div id="stickerTextGroup">
+                <label for="stickerText">Sticker Text: </label>
+                <input id="stickerText" title="Sticker" type="text" value="Am 27.08.<br>in<br>Trebur" onkeyup="setContent('sticker', value)" />
+            </div>
+        </fieldset>
+
+        <div id="footerGroup">
+            <div>
+                <label for="showUrl">URL zeigen: </label>
+                <input id="showUrl" title="Show URL" type="checkbox" onchange="showUrl(checked)" />
+            </div>
+        </div>
+		
+		<button type="button" onclick="saveWithDomToImage()">PNG EXPORTIEREN</button>
+	</div>
+</div>
+</body></html>
