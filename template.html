@@ -30,7 +30,7 @@
 
 		.headline {
             position: absolute;
-            top: 450px;
+            top: 404px;
             height: 75px;
             background-color: #49894b; /* Hintergrundfarbe */
             transform: skew(-10deg); /* Verzerrung für Parallelogramm-Effekt */
@@ -57,6 +57,7 @@
             min-width: 18cm;
             min-height: 18cm;
             max-width: 18cm;
+            max-height: 24cm;
             background-color: #fffff1;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
@@ -94,7 +95,7 @@
             background-color: rgba(255, 255, 241, 0.75);
             padding: 20px;
             position: absolute;
-            top: 550px;
+            top: 500px;
             left: 25px;
             border-left: 8px solid #49894b;
         }
@@ -309,6 +310,8 @@
                     lastMousePosition = pos;
                 }
             }
+
+            e.preventDefault();
         }
 
         function moveBackgroundImage(offsetX, offsetY) {
