@@ -29,11 +29,11 @@
         }
 
 		.headline {
-            width: 330px;
+            position: absolute;
+            top: 450px;
             height: 75px;
             background-color: #49894b; /* Hintergrundfarbe */
             transform: skew(-10deg); /* Verzerrung für Parallelogramm-Effekt */
-            margin: 50px auto;
             padding: 20px;
             display: flex;
             align-items: center;
@@ -55,9 +55,8 @@
 		
         .flyer {
             min-width: 18cm;
-            min-height: 24cm;
+            min-height: 18cm;
             max-width: 18cm;
-            max-height: 24cm;
             background-color: #fffff1;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
@@ -95,7 +94,7 @@
             background-color: rgba(255, 255, 241, 0.75);
             padding: 20px;
             position: absolute;
-            bottom: 107px;
+            top: 550px;
             left: 25px;
             border-left: 8px solid #49894b;
         }
@@ -300,6 +299,18 @@
             lastMousePosition = null
         }
 
+        function moveBackground(e) {
+            const pos = e.clientX ? e : e.touches[0];
+            if (isBackgroundMoving) {
+                if (lastMousePosition == null) {
+                    lastMousePosition = pos;
+                } else {
+                    moveBackgroundImage(pos.clientX - lastMousePosition.clientX, pos.clientY - lastMousePosition.clientY);
+                    lastMousePosition = pos;
+                }
+            }
+        }
+
         function moveBackgroundImage(offsetX, offsetY) {
             const backgroundImage = document.querySelector('#backgroundImage');
 
@@ -338,7 +349,7 @@
             const imageInput = document.querySelector('#imageInput');
             const dropZone = document.querySelector('#dropZone');
 
-            headlineText.value = 'Zukunft nachhaltig gesalten';
+            headlineText.value = 'Zukunft nachhaltig <br> gestalten';
             descriptionText.value = 'Für eine <i>Politik</i>, die unsere <b>Umwelt</b> schützt und sozial gerecht ist. Gemeinsam für morgen. Für eine <i>Politik</i>, die unsere <b>Umwelt</b> schützt und sozial gerecht ist. Gemeinsam für morgen. Für eine <i>Politik</i>, die unsere <b>Umwelt</b> schützt und sozial gerecht ist. Gemeinsam für morgen.';
             stickerText.value = 'Am 27.08.<br>in<br>Trebur';
 
@@ -348,16 +359,11 @@
 
             backgroundImage.addEventListener('mousedown', beginBackgroundMove);
             backgroundImage.addEventListener('mouseup', endBackgroundMove);
-            backgroundImage.addEventListener('mousemove', e => {
-                if (isBackgroundMoving) {
-                    if (lastMousePosition == null) {
-                        lastMousePosition = e;
-                    } else {
-                        moveBackgroundImage(e.clientX - lastMousePosition.clientX, e.clientY - lastMousePosition.clientY);
-                        lastMousePosition = e;
-                    }
-                }
-            });
+            backgroundImage.addEventListener('mousemove', moveBackground);
+
+            backgroundImage.addEventListener('touchstart', beginBackgroundMove);
+            backgroundImage.addEventListener('touchend', endBackgroundMove);
+            backgroundImage.addEventListener('touchmove', moveBackground);
 
             backgroundImage.addEventListener('wheel', e => {
                 if (e.deltaY > 0) {
@@ -402,7 +408,7 @@
 	<div id="flyer" class="flyer">
         <div class="content">
             <div id="backgroundImage" class="background"></div>
-            <div class="headline" style="position: absolute; top: 353px;">
+            <div class="headline">
                 <div id="headline" class="headline-text">Zukunft nachhaltig gestalten</div>
             </div>
             <div id="description" class="description" style=""><p>Für eine Politik, die unsere Umwelt schützt und sozial gerecht ist.</p></div>
@@ -463,7 +469,7 @@
 
         <div id="headlineTextGroup">
             <label for="headlineText">Headline: </label>
-            <input id="headlineText" title="Headline" type="text" value="Zukunft nachhaltig gestalten" onkeyup="setContent('headline', value)" />
+            <input id="headlineText" title="Headline" type="text" value="Zukunft nachhaltig <br> gestalten" onkeyup="setContent('headline', value)" />
         </div>
 
         <div id="descriptionTextGroup">
